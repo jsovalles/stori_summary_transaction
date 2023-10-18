@@ -1,0 +1,6 @@
+environment: local
+smtp-server: smtp.gmail.com
+smtp-port: "587"
+smtp-username: storitest0@gmail.com
+smtp-password: "fjli pxvq fdwu hojr"
+general-email: "storitest0@gmail.com"

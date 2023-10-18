@@ -5,11 +5,17 @@ import (
 	"fmt"
 
 	"github.com/jsovalles/stori_transaction_summary/internal/api"
+	"github.com/jsovalles/stori_transaction_summary/internal/config"
 	"github.com/jsovalles/stori_transaction_summary/internal/controller"
+	"github.com/jsovalles/stori_transaction_summary/internal/mail"
+	"github.com/jsovalles/stori_transaction_summary/internal/service"
 	"go.uber.org/fx"
 )
 
 var Module = fx.Options(
+	config.ConfigModule,
+	mail.Module,
+	service.Module,
 	controller.Module,
 	api.Module,
 	fx.Invoke(bootstrap),
