@@ -66,7 +66,31 @@ Clean Architecture uses this rule to keep the dependency direction from outside 
 
 ## Routes
 
-### upload Transactions
+### Sign-Up Endpoint
+
+- Method: POST
+- URL: `/api/sign-up`
+- Description: Allows users to sign up by providing their email address. This initiates the registration process.
+- Request:
+    - Headers:
+        - Content-Type: application/json (Required) - Specifies that the request body contains JSON data.
+        - Body: JSON Object with an "email" field (Required) - The email address of the user signing up.
+- Response:
+    - Status Codes:
+        - 200 OK: Sign-up successful.
+        - 400 Bad Request: Invalid request or missing email field.
+        - 500 Internal Server Error: An error occurred during sign-up process.
+    - Body: JSON object containing the account-id.
+
+#### Example
+
+```bash
+curl --location 'localhost:8080/api/sign-up' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email": "test@gmail.com"
+}'
+```
 
 - Method: POST
 - URL: `/api/upload-transactions`
@@ -74,7 +98,8 @@ Clean Architecture uses this rule to keep the dependency direction from outside 
 - Request:
     - Headers:
         - Content-Type: multipart/form-data
-    - Body: Form data with a file field named "file".
+        - account-id: (Required) - The account ID for the user we want to send the email.
+    - Body: Form data with a file field named "file" - The uploaded .CSV file.
 - Response:
     - Status Code: 
         - 200 OK - Successful uploaded and email sent.
@@ -86,6 +111,32 @@ Clean Architecture uses this rule to keep the dependency direction from outside 
 
 ```bash
 curl --location 'localhost:8080/api/upload-transactions' \
+--header 'account-id: 1c123230-5c31-4f39-836d-fe426bbb4d2a' \
+--form 'file=@"///wsl.localhost/Ubuntu/home/jsovalles/StoriTransactionSummary/tsx.csv"'
+```
+
+### Upload Transactions
+
+- Method: POST
+- URL: `/api/upload-transactions`
+- Description: Allows to upload a .CSV file containing transaction data. After the file is uploaded, the server processes it to generate a financial summary report, which is then sent via email to the user.
+- Request:
+    - Headers:
+        - Content-Type: multipart/form-data
+        - account-id: (Required) - The account ID for the user we want to send the email.
+    - Body: Form data with a file field named "file" - The uploaded .CSV file.
+- Response:
+    - Status Code: 
+        - 200 OK - Successful uploaded and email sent.
+        - 400 Bad Request - Invalid request or uploaded file.
+        - 500 Internal Server Error - An error occurred during processing.
+    - Body: JSON object containing the summary of transactions.
+
+#### Example
+
+```bash
+curl --location 'localhost:8080/api/upload-transactions' \
+--header 'account-id: 1c123230-5c31-4f39-836d-fe426bbb4d2a' \
 --form 'file=@"///wsl.localhost/Ubuntu/home/jsovalles/StoriTransactionSummary/tsx.csv"'
 ```
 

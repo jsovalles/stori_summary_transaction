@@ -19,14 +19,14 @@ const (
 )
 
 type Email interface {
-	SendEmail(ts models.TransactionSummary) (err error)
+	SendEmail(ts models.TransactionSummary, account models.Account) (err error)
 }
 
 type email struct {
 	config config.Config
 }
 
-func (e *email) SendEmail(ts models.TransactionSummary) (err error) {
+func (e *email) SendEmail(ts models.TransactionSummary, account models.Account) (err error) {
 
 	body, err := generateEmailBody(ts)
 	if err != nil {
@@ -34,7 +34,7 @@ func (e *email) SendEmail(ts models.TransactionSummary) (err error) {
 	}
 
 	from := mail.Address{Address: e.config.GeneralEmail}
-	to := mail.Address{Address: e.config.GeneralEmail}
+	to := mail.Address{Address: account.Email}
 	msg := fmt.Sprintf(MESSAGE_INFO, from.Address, to.Address, EMAIL_SUBJECT, body)
 
 	auth := smtp.PlainAuth("", e.config.SmtpUsername, e.config.SmtpPassword, e.config.SmtpServer)
@@ -69,8 +69,8 @@ func generateEmailBody(ts models.TransactionSummary) (body string, err error) {
 	return
 }
 
-func NewTokenCreator(config config.Config) Email {
+func NewEmailCreator(config config.Config) Email {
 	return &email{config: config}
 }
 
-var Module = fx.Provide(NewTokenCreator)
+var Module = fx.Provide(NewEmailCreator)

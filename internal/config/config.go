@@ -14,6 +14,11 @@ type Config struct {
 	SmtpUsername string `mapstructure:"smtp-username"`
 	SmtpPassword string `mapstructure:"smtp-password"`
 	GeneralEmail string `mapstructure:"general-email"`
+	DbHost       string `mapstructure:"db-host"`
+	DbPort       string `mapstructure:"db-port"`
+	DbUsername   string `mapstructure:"db-username"`
+	DbPassword   string `mapstructure:"db-password"`
+	DbSchema     string `mapstructure:"db-schema"`
 }
 
 func NewEnv() Config {
@@ -72,6 +77,26 @@ func ForceMapping(env *Config) {
 
 	if env.GeneralEmail == "" {
 		env.GeneralEmail = viper.GetString("general-email")
+	}
+
+	if env.DbHost == "" {
+		env.DbHost = viper.GetString("db-host")
+	}
+
+	if env.DbPort == "" {
+		env.DbPort = viper.GetString("db-port")
+	}
+
+	if env.DbUsername == "" {
+		env.DbUsername = viper.GetString("db-username")
+	}
+
+	if env.DbPassword == "" {
+		env.DbPassword = viper.GetString("db-password")
+	}
+
+	if env.DbSchema == "" {
+		env.DbSchema = viper.GetString("db-schema")
 	}
 
 }

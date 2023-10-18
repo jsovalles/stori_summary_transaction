@@ -1,6 +1,7 @@
 package utils
 
 const (
+	AccountIdErr       = "Account ID not found in header"
 	ParseFormErr       = "Unable to parse form, please verify"
 	UploadedFileErr    = "Unable to get file, please verify"
 	InvalidFileErr     = "Invalid file type. Only .csv files are allowed."

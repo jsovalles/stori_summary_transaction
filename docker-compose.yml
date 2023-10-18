@@ -1,8 +1,22 @@
 version: '3'
 
 services:
-  app:
-    image: stori-transaction-summary
-    container_name: stori-transaction-summary-service
+#  app:
+#    image: stori-transaction-summary
+#    container_name: stori-transaction-summary-service
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - db
+  db:
+    image: postgres
+    restart: always
+    container_name: database
     ports:
-      - "8080:8080"
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: pgdb
+    volumes:
+      - ./db-scripts:/docker-entrypoint-initdb.d

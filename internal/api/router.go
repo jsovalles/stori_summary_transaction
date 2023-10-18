@@ -17,6 +17,7 @@ func (api *Api) SetupRoutes() {
 
 	apiRoute := r.Group("/api")
 	apiRoute.POST("/upload-transactions", api.SummaryTransactionController.UploadTransactions)
+	apiRoute.POST("/sign-up", api.SummaryTransactionController.SignUpAccount)
 
 	if err := r.Run(":8080"); err != nil {
 		log.Fatalln("Failed to listen and serve on port 8080: " + err.Error())

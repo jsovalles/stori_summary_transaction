@@ -1,5 +1,11 @@
 package models
 
+import "github.com/google/uuid"
+
+type Account struct {
+	Id    uuid.UUID `json:"id" db:"account_id"`
+	Email string    `json:"email" db:"account_email"`
+}
 type Record struct {
 	ID          int
 	Month       string

@@ -9,19 +9,34 @@ import (
 
 	"github.com/jsovalles/stori_transaction_summary/internal/mail"
 	"github.com/jsovalles/stori_transaction_summary/internal/models"
+	"github.com/jsovalles/stori_transaction_summary/internal/repository"
 	"github.com/jsovalles/stori_transaction_summary/internal/utils"
 	"go.uber.org/fx"
 )
 
 type SummaryTransactionService interface {
-	SummaryTransaction(file multipart.File) (ts models.TransactionSummary, err error)
+	SignUpAccount(account models.Account) (res models.Account, err error)
+	SummaryTransaction(file multipart.File, accountId string) (ts models.TransactionSummary, err error)
 }
 
 type summaryTransactionService struct {
-	email mail.Email
+	email      mail.Email
+	repository repository.SummaryTransactionRepository
 }
 
-func (st *summaryTransactionService) SummaryTransaction(file multipart.File) (ts models.TransactionSummary, err error) {
+func (st *summaryTransactionService) SignUpAccount(account models.Account) (res models.Account, err error) {
+
+	err = st.repository.SignUpAccount(account)
+	if err != nil {
+		return
+	}
+
+	res = models.Account{Id: account.Id, Email: account.Email}
+
+	return
+}
+
+func (st *summaryTransactionService) SummaryTransaction(file multipart.File, accountId string) (ts models.TransactionSummary, err error) {
 
 	records, err := fileToRecord(file)
 	if err != nil {
@@ -30,7 +45,12 @@ func (st *summaryTransactionService) SummaryTransaction(file multipart.File) (ts
 
 	ts = calculateSummaryInformation(records)
 
-	err = st.email.SendEmail(ts)
+	account, err := st.repository.GetAccountByAccountId(accountId)
+	if err != nil {
+		return
+	}
+
+	err = st.email.SendEmail(ts, account)
 	if err != nil {
 		return models.TransactionSummary{}, err
 	}
@@ -107,8 +127,8 @@ func calculateSummaryInformation(records []models.Record) (total models.Transact
 	return
 }
 
-func NewSummaryTransactionService(email mail.Email) SummaryTransactionService {
-	return &summaryTransactionService{email: email}
+func NewSummaryTransactionService(email mail.Email, repository repository.SummaryTransactionRepository) SummaryTransactionService {
+	return &summaryTransactionService{email: email, repository: repository}
 }
 
 var Module = fx.Provide(NewSummaryTransactionService)
