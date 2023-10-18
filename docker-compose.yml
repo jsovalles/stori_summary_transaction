@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  app:
+    image: stori-transaction-summary
+    container_name: stori-transaction-summary-service
+    ports:
+      - "8080:8080"
