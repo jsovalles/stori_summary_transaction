@@ -20,6 +20,7 @@ const (
 type SummaryTransactionController interface {
 	UploadTransactions(ctx *gin.Context)
 	SignUpAccount(ctx *gin.Context)
+	ListAccountTransactionsByAccountId(ctx *gin.Context)
 }
 
 type summaryTransactionController struct {
@@ -42,17 +43,12 @@ func (c *summaryTransactionController) SignUpAccount(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"data": account.Id,
+		"data": account,
 	})
 }
 
 func (c *summaryTransactionController) UploadTransactions(ctx *gin.Context) {
-
-	accountID := ctx.Request.Header.Get("account-id")
-	if accountID == "" {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": utils.AccountIdErr})
-		return
-	}
+	accountId := ctx.Param("id")
 
 	err := ctx.Request.ParseMultipartForm(MB)
 	if err != nil {
@@ -73,7 +69,7 @@ func (c *summaryTransactionController) UploadTransactions(ctx *gin.Context) {
 		return
 	}
 
-	records, err := c.service.SummaryTransaction(file, accountID)
+	records, err := c.service.SummaryTransaction(file, accountId)
 	if err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -82,6 +78,21 @@ func (c *summaryTransactionController) UploadTransactions(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": records,
+	})
+}
+
+func (c *summaryTransactionController) ListAccountTransactionsByAccountId(ctx *gin.Context) {
+	id := ctx.Param("id")
+
+	transactions, err := c.service.ListAccountTransactionsByAccountId(id)
+	if err != nil {
+		log.Error(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": transactions,
 	})
 }
 

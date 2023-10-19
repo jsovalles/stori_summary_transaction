@@ -4,7 +4,7 @@ smtp-port: "587"
 smtp-username: storitest0@gmail.com
 smtp-password: "fjli pxvq fdwu hojr"
 general-email: "storitest0@gmail.com"
-db-host: localhost
+db-host: db #localhost if its done without docker-compose
 db-port: "5432"
 db-username: root
 db-password: root

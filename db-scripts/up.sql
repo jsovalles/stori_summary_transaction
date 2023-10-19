@@ -7,10 +7,10 @@ CREATE TABLE accounts (
 );
 
 CREATE TABLE transactions (
-    transaction_id SERIAL PRIMARY KEY,
+    transaction_id INTEGER PRIMARY KEY,
     account_id UUID NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
-    date TEXT NOT NULL,
+    transaction_date TEXT NOT NULL,
     FOREIGN KEY (account_id) REFERENCES accounts(account_id)
 );
 
