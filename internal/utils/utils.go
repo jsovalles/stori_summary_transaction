@@ -1,6 +1,7 @@
 package utils
 
 const (
+	ParseUUIDErr       = "Error parsing UUID, err:%s"
 	ParseFormErr       = "Unable to parse form, please verify"
 	UploadedFileErr    = "Unable to get file, please verify"
 	InvalidFileErr     = "Invalid file type. Only .csv files are allowed."
@@ -10,6 +11,7 @@ const (
 	ParsingTemplateErr = "Error parsing template, err: %s"
 	ExecuteTemplateErr = "Error executing template, err: %s"
 	EmailErr           = "Error sending email, err:%s"
+	NoUserErr          = "there are no results for this user, please validate"
 )
 
 const EmailTemplate = `
@@ -86,7 +88,7 @@ const EmailTemplate = `
         </ul>
 
         {{range $month, $stats := .Summary.MonthStats}}
-            <h2>Transactions for {{$month}}</h2>
+            <h2>Transactions for Month {{$month}}</h2>
             <ul>
                 <li>Average Credit Amount: {{$stats.AverageCredit}}</li>
                 <li>Average Debit Amount: {{$stats.AverageDebit}}</li>

@@ -1,8 +1,41 @@
-version: '3'
+version: "3"
 
 services:
   app:
     image: stori-transaction-summary
+    restart: always
     container_name: stori-transaction-summary-service
     ports:
       - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - app-net
+  db:
+    image: postgres
+    restart: always
+    container_name: database
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: pgdb
+    volumes:
+      - ./db-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - app-net
+#  pgadmin:
+#    image: dpage/pgadmin4
+#    container_name: pgadmin_container
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: a@a.com
+#      PGADMIN_DEFAULT_PASSWORD: .
+#      PGADMIN_LISTEN_PORT: 80
+#    ports:
+#      - "5050:80"
+#    depends_on:
+#      - db
+networks:
+  app-net:
+    driver: bridge
